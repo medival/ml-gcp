@@ -1,5 +1,5 @@
 {
-  "name": "medival.lab",
+  "name": "ml-with-gc",
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
@@ -12,7 +12,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "@hapi/hapi": "^21.3.7",
-    "@tensorflow/tfjs-node": "^4.17.0"
+    "@hapi/hapi": "^21.3.9",
+    "@tensorflow/tfjs-node": "^4.18.0"
   }
 }
