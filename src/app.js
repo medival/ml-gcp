@@ -6,7 +6,7 @@ const { loadModel, predict } = require("./inference");
   console.log('model loeader!');
 
   const server = Hapi.server({
-    host: process.env.NODE_ENV != 'production' ? 'localhost' : '0.0.0.0',
+    host: '0.0.0.0',
     port: process.env.PORT
   });
 
