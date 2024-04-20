@@ -1,5 +1,6 @@
 const Hapi = require('@hapi/hapi');
 const { loadModel, predict } = require("./inference");
+const { store_data } = require("./firestore");
 
 (async () => {
   const model = await loadModel();
@@ -11,24 +12,39 @@ const { loadModel, predict } = require("./inference");
   });
 
   server.route({
+    method: 'GET',
+    path: '/',
+    handler: async () => {
+      return "Hello, this page is working"
+    }
+  })
+
+  server.route({
     method: 'POST',
     path: '/predicts',
-    handler: async (request) => {
-      const { image } = request.payload;
+    handler: async (request, h) => {
+      try {
+        const { image } = request.payload;
 
-      const predictions = await predict(model, image);
+        const predictions = await predict(model, image);
 
-      const [paper, rock] = predictions;
+        const [paper, rock] = predictions;
 
-      if (paper) {
-        return { result: 'paper' };
+        if (paper) {
+          return { result: 'paper' };
+        }
+
+        if (rock) {
+          return { result: 'rock' }
+        }
+
+        return { result: 'scissors' };
+      } catch (error) {
+        console.error("Error predicting", error)
+        return history.response({
+          error: 'Prediction failed'
+        }).code(500);
       }
-
-      if (rock) {
-        return { result: 'rock' }
-      }
-
-      return { result: 'scissors' };
     },
 
     options: {
@@ -40,10 +56,20 @@ const { loadModel, predict } = require("./inference");
   });
 
   server.route({
-    method: 'GET',
-    path: '/',
-    handler: async () => {
-      return "Hello, this page is working"
+    method: 'POST',
+    path: '/upload',
+    handler: async (request, h) => {
+      try {
+        await store_data();
+        return h.response({
+          message: 'Data stored successfully'
+        });
+      } catch (error) {
+        console.error('Error uploading', error);
+        return h.response({
+          error: 'Upload failed'
+        }).code(500)
+      }
     }
   })
 
