@@ -39,6 +39,14 @@ const { loadModel, predict } = require("./inference");
     }
   });
 
+  server.route({
+    method: 'GET',
+    path: '/',
+    handler: async () => {
+      return "Hello, this page is working"
+    }
+  })
+
   await server.start();
 
   console.log(`server start at ${server.info.uri}`);
